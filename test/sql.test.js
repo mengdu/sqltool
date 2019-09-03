@@ -21,6 +21,7 @@ test('test group', () => {
 test('test where', () => {
   expect(Sql.where()).toBe('')
   expect(Sql.where({})).toBe('')
+  expect(Sql.where(null)).toBe('')
 
   expect(Sql.where({ a: 1, b: 'test' })).toBe('where `a` = 1 and `b` = \'test\'')
   expect(Sql.where({ 'u.userId': 1000 })).toBe('where `u`.`userId` = 1000')
@@ -28,8 +29,8 @@ test('test where', () => {
   expect(Sql.where({ a: Op.isNull() })).toBe('where `a` is null')
   expect(Sql.where({ a: Op.like('%abc%') })).toBe('where `a` like \'%abc%\'')
   expect(Sql.where({ a: Op.id('u.userId') })).toBe('where `a` = `u`.`userId`')
-  expect(Sql.where({ a: Op.id('u.userId', '!=')})).toBe('where `a` != `u`.`userId`')
-  expect(Sql.where({ a: Op.raw('is null')})).toBe('where `a` is null')
+  expect(Sql.where({ a: Op.id('u.userId', '!=') })).toBe('where `a` != `u`.`userId`')
+  expect(Sql.where({ a: Op.raw('is null') })).toBe('where `a` is null')
 
   expect(Sql.where({ $or: [] })).toBe('')
   expect(Sql.where({ $or: {} })).toBe('')
@@ -70,13 +71,41 @@ test('test join', () => {
   ])).toBe('join `users` as `u` left join `types` as `t`')
 
   expect(Sql.join([
-    { table: 'users', type: 'join', as: 'u', on: ['u.id', '=', 'uid'] },
+    { table: 'users', type: 'join', as: 'u', on: ['u.id', '=', 'uid'] }
   ])).toBe('join `users` as `u` on `u`.`id` = `uid`')
   expect(Sql.join([
-    { table: 'users', type: 'join', as: 'u', on: { status: Op.isNotNull() } },
+    { table: 'users', type: 'join', as: 'u', on: { status: Op.isNotNull() } }
   ])).toBe('join `users` as `u` on `status` is not null')
 
   expect(Sql.join([
     { table: Op.raw('select * users'), type: 'join', as: 'u' }
   ])).toBe('join (select * users) as `u`')
+})
+
+test('test create', () => {
+  expect(() => Sql.create()).toThrow()
+  expect(() => Sql.create('test')).toThrow()
+  expect(() => Sql.create('test', null)).toThrow()
+
+  expect(Sql.create('test', { name: 'abc', age: 18 })).toBe('insert into test(`name`, `age`) values(\'abc\', 18)')
+
+  expect(() => Sql.insert()).toThrow()
+  expect(() => Sql.insert('test')).toThrow()
+  expect(() => Sql.insert('test', [])).toThrow()
+  expect(() => Sql.insert('test', [null])).toThrow()
+
+  expect(Sql.insert('test', [{ a: 'aaa', b: 10, c: null }, { a: 'bbb', b: 12, c: false }]))
+    .toBe('insert into test(`a`, `b`, `c`) values(\'aaa\',10,NULL), (\'bbb\',12,false)')
+})
+
+test('test update', () => {
+  expect(() => Sql.update()).toThrow()
+  expect(() => Sql.update('test')).toThrow()
+  expect(() => Sql.update('test', null)).toThrow()
+  expect(() => Sql.update('test', null, null)).toThrow()
+  expect(() => Sql.update('test', {}, null)).toThrow('No data to be updated')
+
+  expect(Sql.update('test', { a: 'aaa', b: 10, c: null }, null)).toBe('update test set `a`=\'aaa\', `b`=10, `c`=NULL')
+  expect(Sql.update('test', { a: 'aaa', b: 10, c: null }, { id: 100, status: Op.raw('is not null') }))
+    .toBe('update test set `a`=\'aaa\', `b`=10, `c`=NULL where `id` = 100 and `status` is not null')
 })

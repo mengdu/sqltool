@@ -48,6 +48,9 @@ declare class Sql {
   static condition (conds: ConditionType): string[];
   static where (conds: ConditionType): string;
   static having (conds: ConditionType): string;
+  static create (table: string, data: { [key: string]: any }): string;
+  static insert (table: string, arr: { [key: string]: any }[]): string;
+  static update (table: string, data: { [key: string]: any }, conds: ConditionType | null): string;
 }
 
 declare namespace Sql {

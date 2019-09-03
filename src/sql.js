@@ -165,6 +165,80 @@ class Sql {
 
     return 'having ' + wheres.join(' and ')
   }
+
+  /**
+   * 插入多条数据
+   * @param {string} table - 表名
+   * @param {object} data - 数据
+   * @returns {string}
+   * **/
+  static create (table, data) {
+    if (typeof table !== 'string') throw new Error('One params of `data` must be an string')
+    if (!data || !(typeof data === 'object')) {
+      throw new Error('One params of `data` must be an object')
+    }
+
+    const keys = []
+    const values = []
+
+    for (const key in data) {
+      keys.push(Sql.escapeId(key))
+      values.push(Sql.escape(data[key]))
+    }
+
+    return `insert into ${table}(${keys.join(', ')}) values(${values.join(', ')})`
+  }
+
+  /**
+   * 插入多条数据
+   * @param {string} table - 表名
+   * @param {Array} arr - 数据
+   * @returns {string}
+   * **/
+  static insert (table, arr) {
+    if (typeof table !== 'string') throw new Error('One params of `data` must be an string')
+    if (!arr || !Array.isArray(arr)) {
+      throw new Error('One params of `data` must be an array')
+    }
+
+    const keys = Object.keys(arr[0]).map(e => Sql.escapeId(e))
+    const values = []
+
+    for (const i in arr) {
+      values.push(`(${Object.values(arr[i]).map(e => Sql.escape(e))})`)
+    }
+
+    return `insert into ${table}(${keys.join(', ')}) values${values.join(', ')}`
+  }
+
+  /**
+   * update
+   * @param {string} table - 表名
+   * @param {object} data - 更新key/val
+   * @param {object|null} conds - 条件，无条件请传 null
+   * @returns {string}
+   * **/
+  static update (table, data, conds) {
+    if (typeof table !== 'string') throw new Error('One params of `data` must be an string')
+    if (!data || !(typeof data === 'object')) {
+      throw new Error('One params of `data` must be an object')
+    }
+    if (!(typeof conds === 'object')) {
+      throw new Error('One params of `conds` must be an object')
+    }
+
+    const fields = []
+
+    for (const key in data) {
+      fields.push(`${Sql.escapeId(key)}=${Sql.escape(data[key])}`)
+    }
+
+    if (fields.length === 0) throw new Error('No data to be updated')
+
+    const where = Sql.where(conds)
+
+    return `update ${table} set ${fields.join(', ')}${where ? ' ' + where : ''}`
+  }
 }
 
 module.exports = Sql
