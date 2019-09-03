@@ -1,4 +1,4 @@
-# SQL
+# Sqltool
 
 A lib for sql build tools
 
