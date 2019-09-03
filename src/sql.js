@@ -5,7 +5,7 @@ class Sql {
   static alias () {
     return alias.apply(null, arguments)
   }
-  
+
   static escape () {
     return escape.apply(null, arguments)
   }
@@ -88,7 +88,7 @@ class Sql {
       }
     }
 
-    return orders.length > 0  ? 'order by ' + orders.join(', ') : ''
+    return orders.length > 0 ? 'order by ' + orders.join(', ') : ''
   }
 
   /**
