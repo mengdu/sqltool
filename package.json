@@ -6,8 +6,8 @@
   "scripts": {
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "lint": "eslint src --ext .js",
-    "lintfix": "eslint src --fix --ext .js,.ts"
+    "lint": "eslint . --ext .js",
+    "lintfix": "eslint . --fix --ext .js"
   },
   "keywords": [
     "sql"

@@ -8,6 +8,9 @@ module.exports = {
     //   jsx: true
     // }
   },
+  env: {
+    jest: true
+  },
   extends: 'standard',
   plugins: [
 
