@@ -8,8 +8,28 @@ const Op = Sql.Op
 
 console.log(Sql.create('test', { age: 1, name: 'admin' }))
 // insert into test(`age`, `name`) values(1, 'admin')
+
+console.log(Sql.insert('test', [
+  { name: 'aaa', age: 18 },
+  { name: 'bbb', age: 20 },
+  { name: 'ccc', age: 25 }
+])) // insert into test(`name`, `age`) values('aaa',18), ('bbb',20), ('ccc',25)
+
 console.log(Sql.update('test', { a: 'aaa', b: 10, c: null }, { id: 100, status: Op.raw('is not null') }))
 // update test set `a`='aaa', `b`=10, `c`=NULL where `id` = 100 and `status` is not null
+
+console.log(Sql.where({
+  $or: [
+    { a: Op.lte(10) },
+    { b: Op.gte(25) }
+  ],
+  status: Op.isNotNull()
+})) // where (`a` <= 10 or `b` >= 25) and `status` is not null
+
+console.log(Sql.join([
+  { table: 'types', as: 't', type: 'left join', on: { 't.id': Op.id('u.typeId'), status: Op.isNotNull() } },
+  { table: 'basic', as: 'b', type: 'join', on: { 'b.id': Op.id('u.bId') } }
+])) // left join `types` as `t` on `t`.`id` = `u`.`typeId` and `status` is not null join `basic` as `b` on `b`.`id` = `u`.`bId`
 ```
 
 ## API
