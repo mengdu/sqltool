@@ -242,7 +242,7 @@ class Sql {
     const values = []
 
     for (const i in arr) {
-      values.push(`(${Object.values(arr[i]).map(e => Sql.escape(e))})`)
+      values.push(`(${Object.values(arr[i]).map(e => Sql.escape(e)).join(', ')})`)
     }
 
     return `insert into ${table}(${keys.join(', ')}) values${values.join(', ')}`

@@ -114,7 +114,7 @@ test('test create', () => {
   expect(() => Sql.insert('test', [null])).toThrow()
 
   expect(Sql.insert('test', [{ a: 'aaa', b: 10, c: null }, { a: 'bbb', b: 12, c: false }]))
-    .toBe('insert into test(`a`, `b`, `c`) values(\'aaa\',10,NULL), (\'bbb\',12,false)')
+    .toBe('insert into test(`a`, `b`, `c`) values(\'aaa\', 10, NULL), (\'bbb\', 12, false)')
 })
 
 test('test update', () => {
