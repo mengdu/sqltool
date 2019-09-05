@@ -174,9 +174,9 @@ class Sql {
    * @returns {string}
    * **/
   static create (table, data, conds = null) {
-    if (typeof table !== 'string') throw new Error('One params of `data` must be an string')
+    if (typeof table !== 'string') throw new Error('The `table` params must be a string')
     if (!data || !(typeof data === 'object')) {
-      throw new Error('One params of `data` must be an object')
+      throw new Error('The `data` params must be an object')
     }
 
     const keys = []
@@ -233,9 +233,9 @@ class Sql {
    * @returns {string}
    * **/
   static insert (table, arr) {
-    if (typeof table !== 'string') throw new Error('One params of `data` must be an string')
+    if (typeof table !== 'string') throw new Error('The `table` params must be a string')
     if (!arr || !Array.isArray(arr)) {
-      throw new Error('One params of `data` must be an array')
+      throw new Error('The `data` params must be an array')
     }
 
     const keys = Object.keys(arr[0]).map(e => Sql.escapeId(e))
@@ -256,12 +256,12 @@ class Sql {
    * @returns {string}
    * **/
   static update (table, data, conds) {
-    if (typeof table !== 'string') throw new Error('One params of `data` must be an string')
+    if (typeof table !== 'string') throw new Error('The `table` params must be a string')
     if (!data || !(typeof data === 'object')) {
-      throw new Error('One params of `data` must be an object')
+      throw new Error('The `data` params must be an object')
     }
     if (!(typeof conds === 'object')) {
-      throw new Error('One params of `conds` must be an object')
+      throw new Error('The `conds` params must be an object')
     }
 
     const fields = []
