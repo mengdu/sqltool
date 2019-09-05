@@ -58,6 +58,8 @@ test('test select', () => {
   expect(Sql.select(['a', Op.raw('count(*) as count')])).toBe('select `a`, count(*) as count from')
   expect(Sql.select([['a', 'a1'], ['b', 'b1']])).toBe('select `a` as `a1`, `b` as `b1` from')
   expect(Sql.select([[Op.raw('count(*)'), 'count']])).toBe('select (count(*)) as `count` from')
+
+  expect(Sql.select(['*'], 't_users')).toBe('select * from `t_users`')
 })
 
 test('test join', () => {
@@ -88,6 +90,23 @@ test('test create', () => {
   expect(() => Sql.create('test', null)).toThrow()
 
   expect(Sql.create('test', { name: 'abc', age: 18 })).toBe('insert into test(`name`, `age`) values(\'abc\', 18)')
+
+  expect(() => Sql.create('test', { name: 'aaa' }, {})).toThrow()
+  expect(Sql.create('t_users', { name: 'abcd', age: 18, types: '1,2,3' }, {
+    exists: {
+      where: {
+        name: 'test'
+      }
+    },
+    notExists: {
+      table: 't_types',
+      where: {
+        name: 'abcd'
+      }
+    }
+  })).toBe('insert into t_users(`name`, `age`, `types`) select \'abcd\', 18, \'1,2,3\' from dual where (exists(select 1 from `t_users` where `name` = \'test\') and not exists(select 1 from `t_types` where `name` = \'abcd\'))')
+  expect(Sql.create('t_users', { name: 'abcd', age: 18, types: '1,2,3' }, { isRaw: true, value: '1 > 0' }))
+    .toBe('insert into t_users(`name`, `age`, `types`) select \'abcd\', 18, \'1,2,3\' from dual where (1 > 0)')
 
   expect(() => Sql.insert()).toThrow()
   expect(() => Sql.insert('test')).toThrow()

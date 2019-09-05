@@ -32,6 +32,9 @@ export type ConditionType = {
 type OnType = [string, OperType, string] | ConditionType
 type JoinType = 'join' | 'inner join' | 'left join' | 'right join'
 export type JoinOptions = { type?: JoinType, table: string | { isRaw: boolean, value: string }, as?: string, on?: OnType }[]
+export type CreateConds = { isRaw: boolean, value: string }
+  | { exists: { where?: ConditionType, table?: string } }
+  | { notExists: { where?: ConditionType, table?: string } }
 
 declare class Sql {
   static alias (field: string, aliasName: string, isRaw?: boolean): string;
@@ -39,16 +42,16 @@ declare class Sql {
   static escapeId (value: string, isRaw?: boolean): string;
   static raw (sql: string): { toSqlString: () => string };
 
-  static select (fields?: string[]): string;
-  static select (fields: { isRaw: boolean, value: string }[]): string;
-  static select (fields: [string, string][]): string;
+  static select (fields?: string[], table?: string): string;
+  static select (fields: { isRaw: boolean, value: string }[], table?: string): string;
+  static select (fields: [string, string][], table?: string): string;
   static join (tables: JoinOptions): string;
   static order (fields: OrderFields): string;
   static group (fields: string[]): string;
   static condition (conds: ConditionType): string[];
   static where (conds: ConditionType): string;
   static having (conds: ConditionType): string;
-  static create (table: string, data: { [key: string]: any }): string;
+  static create (table: string, data: { [key: string]: any }, conds?: CreateConds): string;
   static insert (table: string, arr: { [key: string]: any }[]): string;
   static update (table: string, data: { [key: string]: any }, conds: ConditionType | null): string;
 }

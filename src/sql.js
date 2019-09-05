@@ -18,7 +18,7 @@ class Sql {
     return raw.apply(null, arguments)
   }
 
-  static select (fields = []) {
+  static select (fields = [], table = null) {
     if (!Array.isArray(fields) || fields.length === 0) {
       return 'select * from'
     }
@@ -40,7 +40,7 @@ class Sql {
       return Sql.escapeId(e)
     })
 
-    return 'select ' + attrs.join(', ') + ' from'
+    return 'select ' + attrs.join(', ') + ' from' + (table ? ' ' + Sql.escapeId(table) : '')
   }
 
   static join (tables = []) {
@@ -170,9 +170,10 @@ class Sql {
    * 插入多条数据
    * @param {string} table - 表名
    * @param {object} data - 数据
+   * @param {object} conds - 插入数据条件
    * @returns {string}
    * **/
-  static create (table, data) {
+  static create (table, data, conds = null) {
     if (typeof table !== 'string') throw new Error('One params of `data` must be an string')
     if (!data || !(typeof data === 'object')) {
       throw new Error('One params of `data` must be an object')
@@ -184,6 +185,42 @@ class Sql {
     for (const key in data) {
       keys.push(Sql.escapeId(key))
       values.push(Sql.escape(data[key]))
+    }
+
+    if (conds) {
+      if (typeof conds !== 'object') throw new Error('The `conds` params must be an object')
+      let whereSql = ''
+      if (conds.isRaw) {
+        whereSql = Sql.raw(conds.value).toSqlString()
+      } else {
+        if (!conds.exists && !conds.notExists) {
+          throw new Error('`conds.exists`, `conds.notExists` must provide one of them')
+        }
+
+        if (conds.exists && typeof conds.exists !== 'object') {
+          throw new Error('The `conds.exists` must be an object')
+        }
+
+        if (conds.notExists && typeof conds.notExists !== 'object') {
+          throw new Error('The `conds.notExists` must be an object')
+        }
+
+        const chunks = []
+
+        if (conds.exists) {
+          const where = Sql.where(conds.exists.where)
+          chunks.push(`exists(${Sql.select([{ isRaw: true, value: '1' }], conds.exists.table || table)}${where ? ' ' + where : ''})`)
+        }
+
+        if (conds.notExists) {
+          const where = Sql.where(conds.notExists.where)
+          chunks.push(`not exists(${Sql.select([{ isRaw: true, value: '1' }], conds.notExists.table || table)}${where ? ' ' + where : ''})`)
+        }
+
+        whereSql = chunks.join(' and ')
+      }
+
+      return `insert into ${table}(${keys.join(', ')}) select ${values.join(', ')} from dual where (${whereSql})`
     }
 
     return `insert into ${table}(${keys.join(', ')}) values(${values.join(', ')})`
