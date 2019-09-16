@@ -17,6 +17,16 @@
   "files": [
     "src"
   ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/@mengdu"
+  },
+  "repository": {
+    "type": "https",
+    "url": "git+https://github.com/mengdu/sqltool"
+  },
+  "bugs": {
+    "url": "https://github.com/mengdu/sqltool/issues"
+  },
   "author": "lanyue",
   "license": "MIT",
   "devDependencies": {
