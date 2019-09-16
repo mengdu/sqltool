@@ -2,8 +2,16 @@
 
 A lib for sql build tools
 
+**install**
+
+```ls
+npm i sqltool
+```
+
+## Usage
+
 ```js
-const Sql = require('./src')
+const Sql = require('sqltool')
 const Op = Sql.Op
 
 console.log(Sql.create('test', { age: 1, name: 'admin' }))
