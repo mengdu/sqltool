@@ -10,7 +10,12 @@
     "lintfix": "eslint . --fix --ext .js"
   },
   "keywords": [
-    "sql"
+    "sql",
+    "sql-builder",
+    "query-builder"
+  ],
+  "files": [
+    "src"
   ],
   "author": "lanyue",
   "license": "MIT",
