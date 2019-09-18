@@ -90,6 +90,7 @@ test('test create', () => {
   expect(() => Sql.create('test', null)).toThrow()
 
   expect(Sql.create('test', { name: 'abc', age: 18 })).toBe('insert into test(`name`, `age`) values(\'abc\', 18)')
+  expect(Sql.create('test', { name: 'abc', age: 18 }, null, true)).toBe('insert ignore into test(`name`, `age`) values(\'abc\', 18)')
 
   expect(() => Sql.create('test', { name: 'aaa' }, {})).toThrow()
   expect(Sql.create('t_users', { name: 'abcd', age: 18, types: '1,2,3' }, {
@@ -115,6 +116,9 @@ test('test create', () => {
 
   expect(Sql.insert('test', [{ a: 'aaa', b: 10, c: null }, { a: 'bbb', b: 12, c: false }]))
     .toBe('insert into test(`a`, `b`, `c`) values(\'aaa\', 10, NULL), (\'bbb\', 12, false)')
+
+  expect(Sql.insert('test', [{ a: 'aaa', b: 10, c: null }, { a: 'bbb', b: 12, c: false }], true))
+    .toBe('insert ignore into test(`a`, `b`, `c`) values(\'aaa\', 10, NULL), (\'bbb\', 12, false)')
 })
 
 test('test update', () => {

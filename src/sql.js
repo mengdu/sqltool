@@ -171,9 +171,10 @@ class Sql {
    * @param {string} table - 表名
    * @param {object} data - 数据
    * @param {object} conds - 插入数据条件
+   * @param {Boolean} ignore - 是否过滤重复
    * @returns {string}
    * **/
-  static create (table, data, conds = null) {
+  static create (table, data, conds = null, ignore = false) {
     if (typeof table !== 'string') throw new Error('The `table` params must be a string')
     if (!data || !(typeof data === 'object')) {
       throw new Error('The `data` params must be an object')
@@ -220,19 +221,20 @@ class Sql {
         whereSql = chunks.join(' and ')
       }
 
-      return `insert into ${table}(${keys.join(', ')}) select ${values.join(', ')} from dual where (${whereSql})`
+      return `insert${ignore ? ' ignore' : ''} into ${table}(${keys.join(', ')}) select ${values.join(', ')} from dual where (${whereSql})`
     }
 
-    return `insert into ${table}(${keys.join(', ')}) values(${values.join(', ')})`
+    return `insert${ignore ? ' ignore' : ''} into ${table}(${keys.join(', ')}) values(${values.join(', ')})`
   }
 
   /**
    * 插入多条数据
    * @param {string} table - 表名
    * @param {Array} arr - 数据
+   * @param {Boolean} ignore - 是否过滤重复
    * @returns {string}
    * **/
-  static insert (table, arr) {
+  static insert (table, arr, ignore = false) {
     if (typeof table !== 'string') throw new Error('The `table` params must be a string')
     if (!arr || !Array.isArray(arr)) {
       throw new Error('The `data` params must be an array')
@@ -245,7 +247,7 @@ class Sql {
       values.push(`(${Object.values(arr[i]).map(e => Sql.escape(e)).join(', ')})`)
     }
 
-    return `insert into ${table}(${keys.join(', ')}) values${values.join(', ')}`
+    return `insert${ignore ? ' ignore' : ''} into ${table}(${keys.join(', ')}) values${values.join(', ')}`
   }
 
   /**
