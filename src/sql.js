@@ -167,7 +167,7 @@ class Sql {
   }
 
   /**
-   * 插入多条数据
+   * 插入一条数据
    * @param {string} table - 表名
    * @param {object} data - 数据
    * @param {object} conds - 插入数据条件
