@@ -4,7 +4,7 @@ interface Op {
   gt (val: any): { oper: string, value: any };
   gte (val: any): { oper: string, value: any };
   lt (val: any): { oper: string, value: any };
-  let (val: any): { oper: string, value: any };
+  lte (val: any): { oper: string, value: any };
   eq (val: any): { oper: string, value: any };
   neq (val: any): { oper: string, value: any };
   between (arr: any[]): { isRaw: boolean, value: string };
