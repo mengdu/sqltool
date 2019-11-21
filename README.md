@@ -4,8 +4,10 @@ A lib for sql build tools
 
 **install**
 
+Need dependencie `mysql`
+
 ```ls
-npm i sqltool
+npm i sqltool mysql
 ```
 
 ## Usage
