@@ -236,8 +236,13 @@ class Sql {
    * **/
   static insert (table, arr, ignore = false) {
     if (typeof table !== 'string') throw new Error('The `table` params must be a string')
+
     if (!arr || !Array.isArray(arr)) {
       throw new Error('The `data` params must be an array')
+    }
+
+    if (arr.length <= 0) {
+      throw new Error('Insert data must be an array')
     }
 
     const keys = Object.keys(arr[0]).map(e => Sql.escapeId(e))
