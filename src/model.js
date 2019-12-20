@@ -100,7 +100,7 @@ class BaseModel {
 
   async count (options) {
     const list = await this.findAll({
-      attrs: [[Sql.raw('count(*)'), 'count']],
+      attrs: [{ isRaw: true, value: 'count(*) as `count`' }],
       ...options
     })
 
