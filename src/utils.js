@@ -1,5 +1,5 @@
 'use strict'
-const mysql = require('mysql')
+const sqlstring = require('sqlstring')
 
 function trim (val) {
   return val.trim()
@@ -7,7 +7,7 @@ function trim (val) {
 
 function escapeId (value, isRaw) {
   const [field, aliasName] = value.split(/\s+as\s+/)
-  return aliasName ? alias(field, aliasName, isRaw) : mysql.escapeId(trim(field)).replace(/`\*`/, '*') // mysql 5.6 以下版本不支持 `*` 列
+  return aliasName ? alias(field, aliasName, isRaw) : sqlstring.escapeId(trim(field)).replace(/`\*`/, '*') // mysql 5.6 以下版本不支持 `*` 列
 }
 
 function alias (field, aliasName, isRaw) {
@@ -15,11 +15,11 @@ function alias (field, aliasName, isRaw) {
 }
 
 function escape (value) {
-  return mysql.escape(value)
+  return sqlstring.escape(value)
 }
 
 function raw (sql) {
-  return mysql.raw(sql)
+  return sqlstring.raw(sql)
 }
 
 exports.trim = trim
