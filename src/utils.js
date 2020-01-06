@@ -27,3 +27,4 @@ exports.escapeId = escapeId
 exports.escape = escape
 exports.raw = raw
 exports.alias = alias
+exports.format = sqlstring.format

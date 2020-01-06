@@ -1,5 +1,5 @@
 'use strict'
-const { raw, escape, escapeId, alias } = require('./utils')
+const { raw, escape, escapeId, alias, format } = require('./utils')
 
 class Sql {
   static alias () {
@@ -16,6 +16,10 @@ class Sql {
 
   static raw () {
     return raw.apply(null, arguments)
+  }
+
+  static format (sql, params = []) {
+    return format(sql, params)
   }
 
   static select (fields = [], table = null) {

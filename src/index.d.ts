@@ -41,6 +41,7 @@ declare class Sql {
   static escape (value: any): string;
   static escapeId (value: string, isRaw?: boolean): string;
   static raw (sql: string): { toSqlString: () => string };
+  static format (sql: string, params: object | any[]) : string;
 
   static select (fields?: string[], table?: string): string;
   static select (fields: { isRaw: boolean, value: string }[], table?: string): string;
