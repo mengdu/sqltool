@@ -17,9 +17,6 @@
   "files": [
     "src"
   ],
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/@mengdu"
-  },
   "repository": {
     "type": "https",
     "url": "git+https://github.com/mengdu/sqltool"
