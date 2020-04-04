@@ -56,7 +56,7 @@ declare namespace Sql {
     [key: string]: any;
   }
 
-  type KeyValue = RawValue | string | number | Date | DefaultCondition;
+  type KeyValue = RawValue | string | number | Date | DefaultCondition | undefined;
 
   type OrType = { [key: string]: KeyValue  }
   type AndType = OrType[]
